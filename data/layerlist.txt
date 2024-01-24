@@ -1,0 +1,20 @@
+EC1 Reed
+EC2 Coastal tributary
+EC3 Charophytes
+EC4 Phanerogams freshwater taxa
+EC5 Eelgrass
+EC6 Fucus spp
+EC7 Filamentous algae
+EC8 Soft bottom fauna
+EC9 Blue mussel
+EC10 Coastal piscivore spawning area
+EC11 Coastal piscivore distribution 
+EC12 Flounder spawning area
+EC13 Flounder distribution
+EC14 Whitefish spawning
+EC15 Whitefish distribution
+EC16 Herring spawning area
+EC17 Herring distribution
+EC18 Migrating fish core area
+EC19 Seal core area
+EC20 Seal key distribution
