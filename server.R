@@ -106,23 +106,24 @@ server <- shinyServer(function(input, output, session){
   output$downloadMap <- downloadHandler(
     filename = paste0("instEko.png"),
     content = function(file){
-      r <- project(vals$rst, baltic)
+      r <- terra::project(vals$rst, baltic, method = "near")
       rast_df <- dplyr::arrange(na.omit(raster::as.data.frame(r , xy = TRUE)), desc(names(r )))
       rast_df$brks <- rast_df[, 3]
       
-      rasterClass <- classInt::classIntervals(rast_df[, 3], 5, style = "jenks")
+      rasterClass <- classInt::classIntervals(rast_df$brks, n = 5, style = "equal")
       brks <- rasterClass$brks
       lbl <- c()
       for (i in 1:length(brks) - 1) {
         lbl[i] <- paste(round(brks[i], 2), "-", round(brks[i + 1], 2))
       }
       rast_df$brks <- cut(rast_df[, 3], breaks = brks, labels = lbl)
-      
+      sluColRed$na.value <- "#f7f6e9"
       p <- ggplot() +
-        geom_sf(data = baltic) +
+        geom_sf(data = baltic, col = "lightgrey") +
         geom_tile(data = rast_df, aes_string(x = "x", y = "y", fill = "brks")) +
         sluColRed +
-        coord_sf(xlim = c(17,20), ylim = c(58,62)) +
+        coord_sf(xlim = c(16.5,21), ylim = c(58.5,61.8)) +
+        guides(fill=guide_legend(title="Legend")) +
         xlab("Longitude") + ylab("Latitude") +
         theme_classic()
       ggsave(file, plot = p)
