@@ -22,6 +22,7 @@ main_theme <- bs_theme(version = version_default(), bg = "#FFFFFF", fg = "#00768
 headerCallback <- c("function(thead, data, start, end, display){  $('th', thead).css('display', 'none'); $('.dataTables_scrollHead').remove();}")
 
 # Laddar in raster
+# Rasterfilen är stackad och sparad i en rds-fil. Kod nedan för att göra en ny stack av alla tif-filer i mappen data/Kartor
 # rstPath <- list.files("data/Kartor", pattern = "*.tif", full.names = T)
 # rst <- rast(rstPath[c(11:17, 1:10)]) %>% projectRasterForLeaflet("ngb") %>% round(0)
 # names(rst) <- names(layerlist2[-c(1,2,13)])
@@ -29,7 +30,9 @@ headerCallback <- c("function(thead, data, start, end, display){  $('th', thead)
 # rst <- rst * mask
 # saveRDS(rst, "rst.rds")
 rst <- readRDS("rst.rds")
+# Färgschema till kartorna
 pal <- colorFactor(c("#333333", "#ff0000"), c(0,1), na.color = "transparent")
+# Kod för att anpassa karttext m.m. efter fönsterstorlek
 tag.map.title <- tags$style(HTML(".leaflet-control.map-title {transform: translate(30px,20%); position: fixed !important; right: calc(-280px + 50%); padding-left: 10px; 
                                  padding-right: 10px; background: rgba(255,255,255,0.95); font-weight: bold; font-size: calc(5px + 2vw); border: solid; border-radius: 10px;}
                                  .leaflet .legend i{width: 2.5vh; height: 2.5vh; border-radius: 5px;}
@@ -39,12 +42,12 @@ tag.map.title <- tags$style(HTML(".leaflet-control.map-title {transform: transla
                                  .table{border-bottom-width: 0px;}"))
 # Hämtar matris
 # w <- read_xlsx("data/Linking_EST_to_EC_to_maps_sept_2023.xlsx", sheet="EC_EST_matrix", range="D2:Q19") %>%  setDT() %>% .[!is.na(KOD), ,]
-w <- read.csv2("data/Matrix.csv")
-rownames(w) <- w$X
-wm_0123 <- w[,-1]
-# wm_0123 <- as.matrix(w, rownames.force= w$KOD)[, 2:ncol(w)] %>%  as.integer() %>% 
-#   matrix(nrow = nrow(w), ncol = ncol(w) - 1, byrow = F, dimnames=list(w$KOD, colnames(w)[2:ncol(w)]))
-# wm_01 <- ifelse(wm_0123 >= 1, 1, 0)
+# w <- read.csv2("data/Matrix.csv")
+# rownames(w) <- w$X
+# wm_0123 <- w[,-1]
+# saveRDS(wm_0123, "wm_0123.rds")
+wm_0123 <- readRDS("wm_0123.rds")
 
+# Laddar in bakgrundskarta och funktion för att använda SLU-färger
 baltic <- sf::st_read("data/balticMap/BalticNation.shp") 
 sluColRed <- readRDS("data/sluColRed.rds")
