@@ -108,7 +108,6 @@ observeEvent(input$calc, {
     for(j in 1:length(input$pickES)){
 
     progress$inc(1 / (length(input$pickEC) * length(input$pickES)), detail = paste((i - 1) * length(input$pickES) + j, "av", length(input$pickEC) * length(input$pickES)))
-      browser()
     EC <- input$pickEC[i] %>%  stringr::str_split_i(" ", 1)
     ES <- input$pickES[j] %>%  stringr::str_split_i(" ", 1)
     V <- vals$matris[EC, ES] / 3 * input$matMax
