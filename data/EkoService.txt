@@ -1,0 +1,17 @@
+R1A Carbon regulation
+R2 Erosion control
+R3A Nutrient regulation
+R4 Biological control
+R5 Binding of harmful substances
+R6 Water regulation
+S5 Population maintenance
+P1 Food for humans
+P2A Fodder
+P2B Materials for direct use
+P3A Restocking
+P3B Genetic materials
+P4 Technological materials
+P6 Energy provision
+C1 Recreation
+C4 Culture and heritage
+C5 Symbolic value

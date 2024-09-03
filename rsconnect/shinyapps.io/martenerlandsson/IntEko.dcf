@@ -1,0 +1,12 @@
+name: IntEko
+title: IntEko
+username: martenerlandsson
+account: martenerlandsson
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10650100
+bundleId: 9056590
+url: https://martenerlandsson.shinyapps.io/IntEko/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
