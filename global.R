@@ -48,13 +48,13 @@ rst <- readRDS("rst.rds")
 pal <- colorFactor(c("#333333", "#ff0000"), c(0,1), na.color = "transparent")
 
 # Kod för att anpassa karttext m.m. efter fönsterstorlek
-tag.map.title <- tags$style(HTML(".leaflet-control.map-title {transform: translate(30px,20%); position: fixed !important; right: calc(-280px + 50%); padding-left: 10px;
-                                 padding-right: 10px; background: rgba(255,255,255,0.95); font-weight: bold; font-size: calc(5px + 2vw); border: solid; border-radius: 10px;}
-                                 .leaflet .legend i{width: 2.5vh; height: 2.5vh; border-radius: 5px;}
-                                 .leaflet .legend {line-height: 3vh; font-size: 2vh; border: solid #007681; color: #007681; border-radius: 10px;}
-                                 .bslib-card, .tab-content, .tab-pane, .card-body {overflow: visible !important;}
-                                 thead, tbody, tfoot, tr, td, th {border-color: inherit;border-style: solid;border-width: 0;}
-                                 .table{border-bottom-width: 0px;}"))
+# tag.map.title <- tags$style(HTML(".leaflet-control.map-title {transform: translate(30px,20%); position: fixed !important; right: calc(-280px + 50%); padding-left: 10px;
+#                                  padding-right: 10px; background: rgba(255,255,255,0.95); font-weight: bold; font-size: calc(5px + 2vw); border: solid; border-radius: 10px;}
+#                                  .leaflet .legend i{width: 2.5vh; height: 2.5vh; border-radius: 5px;}
+#                                  .leaflet .legend {line-height: 3vh; font-size: 2vh; border: solid #007681; color: #007681; border-radius: 10px;}
+#                                  .bslib-card, .tab-content, .tab-pane, .card-body {overflow: visible !important;}
+#                                  thead, tbody, tfoot, tr, td, th {border-color: inherit;border-style: solid;border-width: 0;}
+#                                  .table{border-bottom-width: 0px;}"))
 # Hämtar matris
   # w <- read_xlsx("data/Linking_EST_to_EC_to_maps_sept_2023.xlsx", sheet="EC_EST_matrix", range="D2:Q19") %>%  setDT() %>% .[!is.na(KOD), ,]
   # w <- read.csv2("data/Matrix.csv")

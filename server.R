@@ -11,7 +11,7 @@ library("readxl")
 library("shinyWidgets")
 library("ggplot2")
 
-server <- shinyServer(function(input, output, session){
+server <- shinyServer( function(input, output, session){
   tags$style(HTML('<meta name="viewport" content="width=800">'))
   #### Skapar reaktiv variabel ####
   vals <- reactiveValues(selectedRow = 1, matris = wm_0123)
@@ -22,24 +22,30 @@ server <- shinyServer(function(input, output, session){
     datatable(data.frame(Lager = layerlist),
               rownames = F, colnames = NULL, escape = F,
               fillContainer = TRUE, style = "bootstrap", 
-              selection = list(mode = "single", target="row", selected = isolate(vals$selectedRow)),
+              selection = list(mode = "multiple", target = "row", selected = isolate(vals$selectedRow)),
               options = list(pageLength = 100, dom = 't', searching = FALSE, headerCallback = JS(headerCallback)))
   })
   #### . . . Välj kartlager och uppdatera karta ####
   observeEvent(input$layerListTable_rows_selected,{
     # browser()
+    tryCatch({
     vals$selectedRow <- input$layerListTable_rows_selected
-    title <- tags$div(tag.map.title, HTML(layerlist[input$layerListTable_rows_selected]))  
-    selRast <- tryCatch(rst[[names(layerlist2[input$layerListTable_rows_selected])]],
+    title <- tags$div(HTML(layerlist[input$layerListTable_rows_selected]))
+    selVal <- names(layerlist2[input$layerListTable_rows_selected])[which(names(layerlist2[input$layerListTable_rows_selected]) %in% names(rst))]
+    selRast <- tryCatch(rst[[selVal]] |> sum(na.rm = FALSE),
                         error = function(e){
                           r_fail <- rst[[1]] * NA
                           names(r_fail) <- names(layerlist2[input$layerListTable_rows_selected])
                           r_fail
                           })
-    leafletProxy("layerMap") %>% clearImages() %>% clearControls() %>% setView(18.8, 60, zoom = 7) %>% 
-      addRasterImage(selRast, colors = pal, project = F, opacity = 0.8) %>% 
-      addLegend("bottomright", pal = pal, title = "Legend", opacity = 0.95, values = as.integer(values(selRast))) %>% 
+    pal3 <- colorNumeric(c("#333333", "#d7191c"), values(selRast), na.color = "transparent")
+    leaf <- leafletProxy("layerMap") %>% clearImages() %>% clearControls() %>% setView(18.8, 60, zoom = 7) %>%
+      addRasterImage(selRast, colors = pal3, project = F, opacity = 1) %>%
+      addLegend("bottomright", pal = pal3, title = "Legend", opacity = 0.95, values = as.integer(values(selRast))) %>% 
       addControl(title, position = "topleft", className="map-title")
+    }, error = function(e){
+
+    })
   })
   
   #### . . . Leaflet-karta ####
@@ -51,8 +57,8 @@ server <- shinyServer(function(input, output, session){
   output$matris <- renderDataTable({
     mat <- cbind(wm_0123, "rad" = 0)
     
-    selRow <- which(rownames(mat) %in% (input$pickEC %>%  stringr::str_split_i(" ", 1)))
-    selCol <- which(colnames(mat) %in% (input$pickES %>%  stringr::str_split_i(" ", 1)))
+    selRow <- which(rownames(mat) %in% (input$pickEC %>% stringr::str_split_i(" ", 1)))
+    selCol <- which(colnames(mat) %in% (input$pickES %>% stringr::str_split_i(" ", 1)))
     mat[selRow, "rad"] <- 1
     
     # browser()
@@ -105,11 +111,15 @@ server <- shinyServer(function(input, output, session){
     gc()
     if(input$binary){r_sum <- r_sum / max(values(r_sum), na.rm = T)}
     vals$rst <- r_sum
-    title <- tags$div(tag.map.title, HTML("Resultat"))  
+    title <- tags$div(HTML("Resultat"))
     pal2 <- colorNumeric(c("#2c7bb6", "#ffffbf", "#d7191c"), values(r_sum), na.color = "transparent")
-    leafletProxy("resultMap") %>% clearImages() %>% clearControls() %>% setView(18.8, 60, zoom = 7) %>% 
+    leafletProxy("resultMap") %>% 
+      clearImages() %>% 
+      clearControls() %>%
+      setView(18.8, 60, zoom = 7) %>% 
       addRasterImage(r_sum, colors = pal2, project = F, opacity = 0.8) %>% 
-      addLegend("bottomright", pal = pal2, title = "Legend", opacity = 0.95, values = values(r_sum))
+      addLegend("bottomright", pal = pal2, title = "Legend", opacity = 0.95,
+                values = values(r_sum))
   })
   #### . . . Ladda ned-knapp ####
   output$downloadMap <- downloadHandler(
